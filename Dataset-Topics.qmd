@@ -6,18 +6,18 @@ output: html
 categories: project
 ---
 
-[Link to dataset]()
+[https://data.world/databeats/college-completion]()
 
 Things you plan to investigate using this dataset:
 
-- Thing 1
-- Thing 2
-- Thing 3
+- Do private or public institutions have differing graduation rates?
+- Does educational spending per completion by state affect graduation rates by state?
+- Do schools with good retention rates (continued after freshmen year) have good graduation rates?
 
 Stat 251 topics you plan to cover during the analysis:
 
-1. Topic 1
-2. Topic 2
-3. Topic 3
-4. Topic 4
+1. reshaping data
+2. writing functions
+3. visualizing data
+4. joining data
 
