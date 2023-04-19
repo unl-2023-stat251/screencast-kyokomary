@@ -21,3 +21,6 @@ Stat 251 topics you plan to cover during the analysis:
 3. visualizing data
 4. joining data
 
+
+
+(2023-04-19 - Kyoko, is this a tidy tuesday dataset? I would prefer you work with datasets from TT unless we've specifically talked about it. data.world requires registration and sometimes requires that you pay for data access, which is why I'm not a huge fan of it. - Dr. V)
