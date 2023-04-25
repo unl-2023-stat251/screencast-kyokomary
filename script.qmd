@@ -1,0 +1,58 @@
+---
+title: "Script"
+format: html
+editor: visual
+---
+
+## Script
+
+Only using cc_state_details.csv and cc_institution_details.csv because other files are too large.
+
+[**Question 1: Do private or public institutions have differing graduation rates?**]{.underline}
+
+**Types of Grads:**
+
+vsa_grad_after4_first - First-time, full-time students who graduated from this institution within four years
+
+vsa_grad_after6_first - First-time, full-time students who graduated from this institution within six years
+
+vsa_grad_after4_transfer - Full-time transfer students who graduated from this institution within four years
+
+vsa_grad_after6_transfer - Full-time transfer students who graduated from this institution within six years
+
+**Types of institutions**
+
+Public
+
+Private not for profit
+
+Private for profit
+
+1.  All data is in cc_institution_details so subset chronname, level, control, student_count, vsa_grad_after4_first, vsa_grad_after6_first, vsa_grad_after4_transfer, and vsa_grad_after6_transfer into question1 dataset
+2.  filter level to only 4 year since there is a difference between graduating a 4 year university in 4 years vs a 2 year college
+3.  filter any colleges with NA in any variables
+4.  graduation rates will be relative to the student count 2010 so make formula that will divide the respective grad count by student_count and mutate new vsa_grad_after4_first_percent, vsa_grad_after6_first_percent, vsa_grad_after4_transfer_percent, and vsa_grad_after6_transfer_percent into dataset
+5.  filter out student_count, vsa_grad_after4_first, vsa_grad_after6_first, vsa_grad_after4_transfer, and vsa_grad_after6_transfer
+6.  reshape (pivot longer) wide data to long
+7.  ggplot to make bar chart grouped by institution type with each type of graduate rates
+
+[**Question 2: Does educational spending per completion by state affect graduation rates by state?**]{.underline}
+
+**Spending**
+
+state_appr_rank - State appropriations to higher education in fiscal year 2011 per resident
+
+1.  filter both cc_state_sector_details and cc_institution_details by level and only have 4-year
+2.  group by cc_state_sector_details by \$state and groupby cc_institution_details by \$state
+3.  semi join state_sector_details and cc_institution by "state"
+4.  subset out chronname, state, and state_appr_rank
+5.  we have to find the average graduate rank and to simplify we will only look at vsa_grad_after6_first - First-time, full-time students who graduated from this institution within six years from a four year college so mutate a new column that is the sum of vsa_grad_after6_first_percent (from Q1) divided by the count of 4 year colleges in the state
+6.  since our state spending data is a rank lets make the average graduation rates a ranking among the states
+7.  now we can pull mapping data from a library in R and use ggplot to make a map of the US with the ranking of spending on higher eduation per resident next to it's graduation rate from higher education next it
+
+[**Question 3: Does having more students who are Pell recipients produce better graduation rates?**]{.underline}
+
+1.  using the formula used in Q1 step 4, mutate in graduation number relative to student count again in cc_institution_details
+2.  subset out chronname, pell_percentile, and the new graduate rate columns
+3.  group the colleges by ranges of pell_percentile (use some function to make bins)
+4.  Make bar chart that shows different ranges of % of pell reicipents with the different types of graduation rates (i.e. transfers, within 6 years, etc)
