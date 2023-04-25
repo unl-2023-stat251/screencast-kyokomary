@@ -12,7 +12,7 @@ Things you plan to investigate using this dataset:
 
 - Do private or public institutions have differing graduation rates?
 - Does educational spending per completion by state affect graduation rates by state?
-- Do schools with good retention rates (continued after freshmen year) have good graduation rates?
+- Does having more students who are Pell recipients produce better graduation rates?
 
 Stat 251 topics you plan to cover during the analysis:
 
@@ -21,6 +21,3 @@ Stat 251 topics you plan to cover during the analysis:
 3. visualizing data
 4. joining data
 
-
-
-(2023-04-19 - Kyoko, is this a tidy tuesday dataset? I would prefer you work with datasets from TT unless we've specifically talked about it. data.world requires registration and sometimes requires that you pay for data access, which is why I'm not a huge fan of it. - Dr. V)
