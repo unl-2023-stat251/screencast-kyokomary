@@ -1,0 +1,86 @@
+---
+title: "recording"
+output: html_document
+date: "2023-05-03"
+---
+
+```{r}
+institution <- read.csv("cc_institution_details.csv", header = TRUE)
+state <- read.csv("cc_state_sector_details.csv", header = TRUE)
+```
+
+```{r}
+library(magrittr)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(maps)
+```
+
+#If there is a difference in grad rates in private for profit, private non profit, public 4-year universites
+```{r}
+question1 <- institution%>%
+  filter(grepl("4-year",level))%>%
+  filter(grepl("[0-9]{2}", grad_100_value))%>%
+  select(control,grad_100_value,grad_150_value)%>%
+  mutate(across(matches("grad_1.0_value"),as.numeric))
+
+means1 <- question1%>%
+  group_by(control)%>%
+  summarize_if(is.numeric,mean,na.rm=TRUE)
+
+means1 <- means1%>%
+  pivot_longer(-control,names_to = "four_or_six_years", values_to = "Average_Grad_Rate")
+
+question1final <- ggplot(means1, aes(x=control, y = Average_Grad_Rate, fill = four_or_six_years)) + geom_bar(stat = "identity", position = "dodge") + theme_minimal() + labs(x = "Type of institution", y = "Average Graduation Rate")
+question1final
+```
+
+#Simple regression: how state funding affects grad rates
+```{r}
+state2 <- state%>%
+  mutate(state_appr_value = as.numeric(state_appr_value))%>%
+  group_by(state)%>%
+  summarise_at(c("state_appr_value"), mean, na.rm= TRUE)
+
+question2 <- institution%>%
+  select(state, grad_150_value)%>%
+  mutate(grad_150_value = as.numeric(grad_150_value))%>%
+  group_by(state)%>%
+  summarise_at(c("grad_150_value"), mean, na.rm= TRUE)
+
+question2<- right_join(state2,question2, by = "state")%>%
+  filter(grepl("[0-9]{2}", state_appr_value))
+
+question2final <- lm(grad_150_value~state_appr_value,question2)
+summary(question2final)
+```
+#Where are Nebraska Higher Eduacation Institutions?
+```{r}
+us <- map_data("state")
+nebraska <- subset(us, region == "nebraska")
+
+question3 <- institution%>%
+  filter(grepl("Nebraska",state))
+
+colnames(nebraska)[colnames(nebraska) == "long"] = "long_x"
+colnames(nebraska)[colnames(nebraska) == "lat"] = "lat_y"
+
+question3final <- ggplot(data=question3, aes(x= long_x, y = lat_y))+
+  geom_map(data = nebraska, map = nebraska, fill = "red", aes(map_id = region))+
+  coord_fixed()+
+  geom_point()+
+  xlab("Latitude")+
+  ylab("Longitude")+
+  ggtitle("Higher Education Institutions in Nebraska")
+question3final
+
+question3colorfriendly <- ggplot(data=question3, aes(x= long_x, y = lat_y))+
+  geom_map(data = nebraska, map = nebraska, fill = "white", aes(map_id = region))+
+  coord_fixed()+
+  geom_point()+
+  xlab("Latitude")+
+  ylab("Longitude")+
+  ggtitle("Higher Education Institutions in Nebraska")
+question3colorfriendly
+```
